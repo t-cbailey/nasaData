@@ -1,0 +1,11 @@
+#app {
+  text-align: center;
+}
+
+.leaflet-container {
+  height: 50vh;
+  width: 80%;
+  max-width: 1000px;
+  margin: auto;
+  border: 20px solid rgb(0, 0, 0);
+}
