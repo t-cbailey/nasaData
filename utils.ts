@@ -1,8 +1,12 @@
-export const getEvents = async () => {
+export const getEvents = async (url: string) => {
+  console.log(url);
   try {
-    const response = await fetch("https://eonet.gsfc.nasa.gov/api/v3/events", {
-      method: "GET",
-    });
+    const response = await fetch(
+      "https://eonet.gsfc.nasa.gov/api/v3/events" + url,
+      {
+        method: "GET",
+      }
+    );
     if (!response.ok) {
       throw new Error("Network response was not OK");
     }

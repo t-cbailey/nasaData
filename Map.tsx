@@ -3,17 +3,21 @@ import "leaflet/dist/leaflet.css";
 import React from "react";
 import { getEvents } from "./utils";
 import { mapProps, singleEvent } from "./customTypes";
+import { Typography } from "@mui/material";
 
-function Map({ url }: mapProps) {
+function Map({ url, setLoading }: mapProps) {
   const [events, setEvents] = React.useState<singleEvent[]>([]);
   React.useEffect(() => {
-    getEvents().then(({ events }) => {
+    setLoading(true);
+    getEvents(url).then(({ events }) => {
       setEvents(events);
+      setLoading(false);
     });
-  }, []);
+  }, [url]);
 
   return (
     <>
+      <Typography>Found {events.length} events</Typography>
       <MapContainer center={[51.505, -0.09]} zoom={1} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

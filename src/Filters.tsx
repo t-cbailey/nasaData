@@ -3,14 +3,11 @@ import { getCategories } from "../utils";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
-import List from "@mui/material/List";
+import { Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
+
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -23,22 +20,7 @@ function Filters({ setUrl }: filtersProps) {
   const [categories, setCategories] = React.useState<category[]>([]);
   const [categoryName, setCategoryName] = React.useState<string[]>([]);
   const [filtersUrl, setFiltersUrl] = React.useState<string>("");
-
-  React.useEffect(() => {
-    getCategories().then((res) => {
-      setCategories(res);
-    });
-  }, []);
-
-  React.useEffect(() => {
-    let url = "?category=";
-    let currUrl = filtersUrl;
-    categoryName.forEach((name) => {
-      if (filtersUrl.length === 0) {
-        setFiltersUrl((url += `${name},`));
-      } else setFiltersUrl((currUrl += `${name},`));
-    });
-  }, [categoryName]);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -50,6 +32,12 @@ function Filters({ setUrl }: filtersProps) {
       },
     },
   };
+
+  React.useEffect(() => {
+    getCategories().then((res) => {
+      setCategories(res);
+    });
+  }, []);
 
   const handleCategoryChange = (
     event: SelectChangeEvent<typeof categoryName>
@@ -63,8 +51,6 @@ function Filters({ setUrl }: filtersProps) {
     );
   };
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -77,42 +63,56 @@ function Filters({ setUrl }: filtersProps) {
       setDrawerOpen(open);
     };
 
+  React.useEffect(() => {
+    let url = "?category=";
+
+    if (categoryName.length > 0) {
+      categoryName.forEach((name) => {
+        setFiltersUrl((url += `${name},`));
+      });
+    } else {
+      setFiltersUrl("");
+    }
+  }, [categoryName]);
+
   const handleFilterSubmit = () => {
-    console.log("in submit");
     setDrawerOpen(false);
     setUrl(filtersUrl.slice(0, filtersUrl.length - 1));
   };
 
   const list = () => (
     <Box sx={{ width: 250 }} role="presentation">
-      <FormControl sx={{ m: 1, width: 200 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
+      <Typography sx={{ margin: "5%" }}>Filters</Typography>
+      <FormControl sx={{ m: 1, width: 200, marginTop: "5vh" }}>
+        <InputLabel id="category-dropdown">Category</InputLabel>
         <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          labelId="category-dropdown-checkbox"
+          id="category-dropdown-checkbox"
           multiple
           value={categoryName}
           onChange={handleCategoryChange}
-          input={<OutlinedInput label="Tag" />}
+          input={<OutlinedInput label="Category" />}
           renderValue={(selected) => selected.join(", ")}
           MenuProps={MenuProps}
         >
           {categories.map((category) => (
             <MenuItem key={category.id} value={category.id}>
               <Checkbox checked={categoryName.indexOf(category.id) > -1} />
-              <ListItemText primary={category.id} />
+              <ListItemText primary={category.title} />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
+      <Divider />
       <Button
         variant="contained"
         onClick={handleFilterSubmit}
         onKeyDown={handleFilterSubmit}
+        id="filterSubmitButton"
+        sx={{ position: "fixed", bottom: "10%", marginLeft: "5%" }}
       >
         Apply
       </Button>
-      <Divider />
     </Box>
   );
 
