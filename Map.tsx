@@ -2,9 +2,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import React from "react";
 import { getEvents } from "./utils";
-import { singleEvent } from "./customTypes";
+import { mapProps, singleEvent } from "./customTypes";
 
-function Map() {
+function Map({ url }: mapProps) {
   const [events, setEvents] = React.useState<singleEvent[]>([]);
   React.useEffect(() => {
     getEvents().then(({ events }) => {
@@ -12,7 +12,6 @@ function Map() {
     });
   }, []);
 
-  console.log(events);
   return (
     <>
       <MapContainer center={[51.505, -0.09]} zoom={1} scrollWheelZoom={false}>

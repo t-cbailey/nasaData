@@ -28,3 +28,18 @@ export interface geometry {
   type: string;
   coordinates: LatLngTuple;
 }
+
+export interface category {
+  id: string;
+  description: string;
+  layers: string;
+  link: string;
+  title: string;
+}
+
+export interface filtersProps {
+  setUrl: Function;
+}
+export interface mapProps {
+  url: string;
+}
