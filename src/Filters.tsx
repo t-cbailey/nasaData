@@ -5,9 +5,7 @@ import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
-
 import ListItemText from "@mui/material/ListItemText";
-
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -21,6 +19,10 @@ function Filters({ setUrl }: filtersProps) {
   const [categoryName, setCategoryName] = React.useState<string[]>([]);
   const [filtersUrl, setFiltersUrl] = React.useState<string>("");
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [current, setCurrent] = React.useState<"open" | "closed" | "all">(
+    "all"
+  );
+  const [limit, setLimit] = React.useState<string>("100");
 
   const ITEM_HEIGHT = 100;
   const ITEM_PADDING_TOP = 8;
@@ -32,6 +34,18 @@ function Filters({ setUrl }: filtersProps) {
       },
     },
   };
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+      setDrawerOpen(open);
+    };
 
   React.useEffect(() => {
     getCategories().then((res) => {
@@ -51,33 +65,34 @@ function Filters({ setUrl }: filtersProps) {
     );
   };
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-      setDrawerOpen(open);
-    };
+  const handleCurrentChange = (event: SelectChangeEvent) => {
+    setCurrent(event.target.value as "open" | "closed" | "all");
+  };
+  const handleLimitChange = (event: SelectChangeEvent) => {
+    setLimit(event.target.value as string);
+  };
 
   React.useEffect(() => {
-    let url = "?category=";
+    let url = "";
 
     if (categoryName.length > 0) {
       categoryName.forEach((name) => {
-        setFiltersUrl((url += `${name},`));
+        url.length < 1 ? (url += `?category=${name},`) : (url += `${name},`);
       });
+      url = url.slice(0, url.length - 1);
+      url += `&status=${current}`;
+    } else if (categoryName.length < 1) {
+      url += `?status=${current}`;
     } else {
       setFiltersUrl("");
     }
-  }, [categoryName]);
+
+    setFiltersUrl(url + `&limit=${limit}`);
+  }, [categoryName, current, limit]);
 
   const handleFilterSubmit = () => {
     setDrawerOpen(false);
-    setUrl(filtersUrl.slice(0, filtersUrl.length - 1));
+    setUrl(filtersUrl);
   };
 
   const list = () => (
@@ -109,23 +124,53 @@ function Filters({ setUrl }: filtersProps) {
 
       <Divider>
         <FormControl sx={{ m: 1, width: 200 }}>
-          <InputLabel id="current-dropdown">Current</InputLabel>
+          <InputLabel id="current-dropdown">Current?</InputLabel>
           <Select
             labelId="current-dropdown-checkbox"
             id="current-dropdown-checkbox"
-            multiple
-            value={categoryName}
-            onChange={handleCategoryChange}
+            value={current}
+            onChange={handleCurrentChange}
             input={<OutlinedInput label="Current" />}
-            renderValue={(selected) => selected.join(", ")}
             MenuProps={MenuProps}
           >
-            {categories.map((current) => (
-              <MenuItem key={current.id} value={current.id}>
-                <Checkbox checked={categoryName.indexOf(current.id) > -1} />
-                <ListItemText primary={current.title} />
-              </MenuItem>
-            ))}
+            <MenuItem key="open" value="open">
+              <ListItemText primary="open" />
+            </MenuItem>
+            <MenuItem key="closed" value="closed">
+              <ListItemText primary="closed" />
+            </MenuItem>
+            <MenuItem key="all" value="all">
+              <ListItemText primary="all" />
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </Divider>
+      <Divider>
+        <FormControl sx={{ m: 1, width: 200 }}>
+          <InputLabel id="limit-dropdown">Limit</InputLabel>
+          <Select
+            labelId="limit-dropdown-checkbox"
+            id="limit-dropdown-checkbox"
+            value={limit}
+            onChange={handleLimitChange}
+            input={<OutlinedInput label="Limit" />}
+            MenuProps={MenuProps}
+          >
+            <MenuItem key="10" value="10">
+              <ListItemText primary="10" />
+            </MenuItem>
+            <MenuItem key="100" value="100">
+              <ListItemText primary="100" />
+            </MenuItem>
+            <MenuItem key="500" value="500">
+              <ListItemText primary="500" />
+            </MenuItem>
+            <MenuItem key="1000" value="1000">
+              <ListItemText primary="1000" />
+            </MenuItem>
+            <MenuItem key="2000" value="2000">
+              <ListItemText primary="2000" />
+            </MenuItem>
           </Select>
         </FormControl>
       </Divider>
@@ -153,7 +198,7 @@ function Filters({ setUrl }: filtersProps) {
           }}
           onClick={toggleDrawer(true)}
         >
-          {"Apply Filters"}
+          {"Set Filters"}
         </Button>
         <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
           {list()}

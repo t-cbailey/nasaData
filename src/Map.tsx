@@ -1,12 +1,14 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import React from "react";
-import { getEvents } from "./utils";
-import { mapProps, singleEvent } from "./customTypes";
+import { getEvents } from "../utils";
+import { mapProps, singleEvent } from "../customTypes";
 import { Typography } from "@mui/material";
+import { LatLng, LatLngTuple } from "leaflet";
 
 function Map({ url, setLoading }: mapProps) {
   const [events, setEvents] = React.useState<singleEvent[]>([]);
+
   React.useEffect(() => {
     setLoading(true);
     getEvents(url).then(({ events }) => {
@@ -24,7 +26,12 @@ function Map({ url, setLoading }: mapProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {events.map((event) => {
-          let coords = event.geometry[0].coordinates;
+          let coords: LatLngTuple = Array.isArray(
+            event.geometry[0].coordinates[0]
+          )
+            ? event.geometry[0].coordinates[0][0]
+            : event.geometry[0].coordinates;
+
           return (
             <Marker key={event.id} position={[coords[1], coords[0]]}>
               <Popup>

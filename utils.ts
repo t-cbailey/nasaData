@@ -1,5 +1,4 @@
 export const getEvents = async (url: string) => {
-  console.log(url);
   try {
     const response = await fetch(
       "https://eonet.gsfc.nasa.gov/api/v3/events" + url,
