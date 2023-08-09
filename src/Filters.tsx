@@ -22,7 +22,7 @@ function Filters({ setUrl }: filtersProps) {
   const [filtersUrl, setFiltersUrl] = React.useState<string>("");
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
-  const ITEM_HEIGHT = 48;
+  const ITEM_HEIGHT = 100;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
     PaperProps: {
@@ -82,28 +82,54 @@ function Filters({ setUrl }: filtersProps) {
 
   const list = () => (
     <Box sx={{ width: 250 }} role="presentation">
-      <Typography sx={{ margin: "5%" }}>Filters</Typography>
-      <FormControl sx={{ m: 1, width: 200, marginTop: "5vh" }}>
-        <InputLabel id="category-dropdown">Category</InputLabel>
-        <Select
-          labelId="category-dropdown-checkbox"
-          id="category-dropdown-checkbox"
-          multiple
-          value={categoryName}
-          onChange={handleCategoryChange}
-          input={<OutlinedInput label="Category" />}
-          renderValue={(selected) => selected.join(", ")}
-          MenuProps={MenuProps}
-        >
-          {categories.map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              <Checkbox checked={categoryName.indexOf(category.id) > -1} />
-              <ListItemText primary={category.title} />
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <Typography sx={{ m: "10%" }}>Filters</Typography>
+      <Divider>
+        <FormControl sx={{ m: 1, width: 200 }}>
+          <InputLabel id="category-dropdown">Category</InputLabel>
+          <Select
+            labelId="category-dropdown-checkbox"
+            id="category-dropdown-checkbox"
+            multiple
+            value={categoryName}
+            onChange={handleCategoryChange}
+            input={<OutlinedInput label="Category" />}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+          >
+            {categories.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                <Checkbox checked={categoryName.indexOf(category.id) > -1} />
+                <ListItemText primary={category.title} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Divider>
       <Divider />
+
+      <Divider>
+        <FormControl sx={{ m: 1, width: 200 }}>
+          <InputLabel id="current-dropdown">Current</InputLabel>
+          <Select
+            labelId="current-dropdown-checkbox"
+            id="current-dropdown-checkbox"
+            multiple
+            value={categoryName}
+            onChange={handleCategoryChange}
+            input={<OutlinedInput label="Current" />}
+            renderValue={(selected) => selected.join(", ")}
+            MenuProps={MenuProps}
+          >
+            {categories.map((current) => (
+              <MenuItem key={current.id} value={current.id}>
+                <Checkbox checked={categoryName.indexOf(current.id) > -1} />
+                <ListItemText primary={current.title} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Divider>
+
       <Button
         variant="contained"
         onClick={handleFilterSubmit}
@@ -119,7 +145,16 @@ function Filters({ setUrl }: filtersProps) {
   return (
     <div>
       <React.Fragment>
-        <Button onClick={toggleDrawer(true)}>{"Filters"}</Button>
+        <Button
+          sx={{
+            color: "black",
+            border: "solid black 2px",
+            boxShadow: "2px 2px 2px grey",
+          }}
+          onClick={toggleDrawer(true)}
+        >
+          {"Apply Filters"}
+        </Button>
         <Drawer open={drawerOpen} onClose={toggleDrawer(false)}>
           {list()}
         </Drawer>

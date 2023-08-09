@@ -1,10 +1,11 @@
 #app {
+  box-sizing: border-box;
   text-align: center;
 }
 
 .leaflet-container {
-  height: 50vh;
-  width: 80%;
+  height: 60vh;
+  width: 90%;
   max-width: 1000px;
   margin: auto;
   border: 20px solid rgb(0, 0, 0);

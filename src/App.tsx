@@ -5,7 +5,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import React from "react";
-import { Backdrop, CircularProgress } from "@mui/material";
+import { Backdrop, CircularProgress, Typography } from "@mui/material";
 
 import "../App.css";
 
@@ -24,7 +24,9 @@ function App() {
         </Backdrop>
       )}
       <div id="app">
-        <h1>Nasa recorded natural events!</h1>
+        <Typography variant="h3" marginBottom={"2%"}>
+          Nasa Recorded Natural Events
+        </Typography>
         <Filters setUrl={setUrl} />
         <Map url={url} setLoading={setLoading} />
       </div>
