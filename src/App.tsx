@@ -25,10 +25,16 @@ function App() {
       )}
       <div id="app">
         <Typography variant="h3" marginBottom={"2%"}>
-          Nasa Recorded Natural Events
+          Nasa Recorded Global Events
         </Typography>
         <Filters setUrl={setUrl} />
         <Map url={url} setLoading={setLoading} />
+        <footer>
+          All data from{" "}
+          <a href="https://eonet.gsfc.nasa.gov/" target="blank">
+            https://eonet.gsfc.nasa.gov/
+          </a>
+        </footer>
       </div>
     </>
   );

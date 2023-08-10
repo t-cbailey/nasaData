@@ -4,7 +4,7 @@ import React from "react";
 import { getEvents } from "../utils";
 import { mapProps, singleEvent } from "../customTypes";
 import { Typography } from "@mui/material";
-import { LatLng, LatLngTuple } from "leaflet";
+import { LatLngTuple } from "leaflet";
 
 function Map({ url, setLoading }: mapProps) {
   const [events, setEvents] = React.useState<singleEvent[]>([]);

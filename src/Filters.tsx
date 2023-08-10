@@ -23,6 +23,7 @@ function Filters({ setUrl }: filtersProps) {
     "all"
   );
   const [limit, setLimit] = React.useState<string>("100");
+  const [continent, setContinent] = React.useState<string>("");
 
   const ITEM_HEIGHT = 100;
   const ITEM_PADDING_TOP = 8;
@@ -68,9 +69,36 @@ function Filters({ setUrl }: filtersProps) {
   const handleCurrentChange = (event: SelectChangeEvent) => {
     setCurrent(event.target.value as "open" | "closed" | "all");
   };
+  const handleContinentChange = (event: SelectChangeEvent) => {
+    setContinent(event.target.value as string);
+  };
   const handleLimitChange = (event: SelectChangeEvent) => {
     setLimit(event.target.value as string);
   };
+
+  let bbox = "";
+  switch (continent) {
+    case "africa":
+      bbox = "-22.952499,-37.744657,52.457657,37.970185";
+      break;
+    case "asia":
+      bbox = "42.377014,10.857584,190.384827,76.023061";
+      break;
+    case "oceania":
+      bbox = "93.642654,-51.637624,189.443436,-3.544947";
+      break;
+    case "europe":
+      bbox = "-11.119537,34.942237,43.196869,72.363280";
+      break;
+    case "america":
+      bbox = "-174.385986,-56.613931,-17.940674,83.099201";
+      break;
+    case "antarctica":
+      bbox = "-460.846252,-84.856926,291.497498,-61.559342";
+      break;
+    default:
+      "";
+  }
 
   React.useEffect(() => {
     let url = "";
@@ -87,12 +115,26 @@ function Filters({ setUrl }: filtersProps) {
       setFiltersUrl("");
     }
 
+    if (continent) {
+      url.length === 0 ? (url += `?bbox=${bbox}`) : (url += `&bbox=${bbox}`);
+    }
+    console.log(url);
     setFiltersUrl(url + `&limit=${limit}`);
-  }, [categoryName, current, limit]);
+  }, [categoryName, current, limit, continent]);
 
   const handleFilterSubmit = () => {
     setDrawerOpen(false);
     setUrl(filtersUrl);
+  };
+
+  const handleFilterReset = () => {
+    setFiltersUrl("");
+    setCategoryName([]);
+    setCurrent("open");
+    setLimit("");
+    setContinent("");
+    setUrl(filtersUrl);
+    setDrawerOpen(false);
   };
 
   const list = () => (
@@ -120,7 +162,6 @@ function Filters({ setUrl }: filtersProps) {
           </Select>
         </FormControl>
       </Divider>
-      <Divider />
 
       <Divider>
         <FormControl sx={{ m: 1, width: 200 }}>
@@ -134,13 +175,48 @@ function Filters({ setUrl }: filtersProps) {
             MenuProps={MenuProps}
           >
             <MenuItem key="open" value="open">
-              <ListItemText primary="open" />
+              <ListItemText primary="current" />
             </MenuItem>
             <MenuItem key="closed" value="closed">
-              <ListItemText primary="closed" />
+              <ListItemText primary="historic" />
             </MenuItem>
             <MenuItem key="all" value="all">
               <ListItemText primary="all" />
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </Divider>
+      <Divider>
+        <FormControl sx={{ m: 1, width: 200 }}>
+          <InputLabel id="continent-dropdown">Continent</InputLabel>
+          <Select
+            labelId="continent-dropdown-checkbox"
+            id="continent-dropdown-checkbox"
+            value={continent}
+            onChange={handleContinentChange}
+            input={<OutlinedInput label="Location" />}
+            MenuProps={MenuProps}
+          >
+            <MenuItem key="africa" value="africa">
+              <ListItemText primary="Africa" />
+            </MenuItem>
+            <MenuItem key="asia" value="asia">
+              <ListItemText primary="Asia" />
+            </MenuItem>
+            <MenuItem key="oceania" value="oceania">
+              <ListItemText primary="Oceania" />
+            </MenuItem>
+            <MenuItem key="europe" value="europe">
+              <ListItemText primary="Europe" />
+            </MenuItem>
+            <MenuItem key="america" value="america">
+              <ListItemText primary="America" />
+            </MenuItem>
+            <MenuItem key="antarctica" value="antarctica">
+              <ListItemText primary="Antarctica" />
+            </MenuItem>
+            <MenuItem key="all" value="">
+              <ListItemText primary="All" />
             </MenuItem>
           </Select>
         </FormControl>
@@ -180,9 +256,19 @@ function Filters({ setUrl }: filtersProps) {
         onClick={handleFilterSubmit}
         onKeyDown={handleFilterSubmit}
         id="filterSubmitButton"
-        sx={{ position: "fixed", bottom: "10%", marginLeft: "5%" }}
+        sx={{ position: "fixed", bottom: "8%", marginLeft: 10 }}
       >
         Apply
+      </Button>
+
+      <Button
+        variant="contained"
+        onClick={handleFilterReset}
+        onKeyDown={handleFilterReset}
+        id="filterResetButton"
+        sx={{ position: "fixed", bottom: "2%", marginLeft: 10 }}
+      >
+        Reset
       </Button>
     </Box>
   );
