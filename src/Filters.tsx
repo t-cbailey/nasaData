@@ -175,13 +175,13 @@ function Filters({ setUrl }: filtersProps) {
             MenuProps={MenuProps}
           >
             <MenuItem key="open" value="open">
-              <ListItemText primary="current" />
+              <ListItemText primary="Current" />
             </MenuItem>
             <MenuItem key="closed" value="closed">
-              <ListItemText primary="historic" />
+              <ListItemText primary="Historic" />
             </MenuItem>
             <MenuItem key="all" value="all">
-              <ListItemText primary="all" />
+              <ListItemText primary="All" />
             </MenuItem>
           </Select>
         </FormControl>
