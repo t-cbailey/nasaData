@@ -3,13 +3,14 @@ import "leaflet/dist/leaflet.css";
 import React from "react";
 import { getEvents } from "../utils";
 import { mapProps, singleEvent } from "../customTypes";
-import { Typography } from "@mui/material";
 import { LatLngTuple } from "leaflet";
-import marker from "../public/marker.png";
+import marker from "/marker.png";
 import { Icon } from "leaflet";
+import { Backdrop, CircularProgress, Typography } from "@mui/material";
 
-function Map({ url, setLoading }: mapProps) {
+function Map({ url }: mapProps) {
   const [events, setEvents] = React.useState<singleEvent[]>([]);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     setLoading(true);
@@ -23,6 +24,21 @@ function Map({ url, setLoading }: mapProps) {
     <>
       <Typography sx={{ m: "2%" }}>Found {events.length} events</Typography>
       <MapContainer center={[51.505, -0.09]} zoom={2} scrollWheelZoom={false}>
+        {loading && (
+          <Backdrop
+            sx={{
+              color: "#fff",
+              position: "relative",
+              width: "100%",
+              height: "100%",
+
+              zIndex: (theme) => theme.zIndex.drawer + 1,
+            }}
+            open={loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        )}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

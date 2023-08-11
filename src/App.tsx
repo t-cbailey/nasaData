@@ -5,30 +5,21 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import React from "react";
-import { Backdrop, CircularProgress, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import "../styling/App.css";
 
 function App() {
-  const [url, setUrl] = React.useState<string>("");
-  const [loading, setLoading] = React.useState(false);
+  const [url, setUrl] = React.useState<string>("?limit=100");
 
   return (
     <>
-      {loading && (
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
       <div id="app">
         <Typography variant="h3" marginBottom={"2%"}>
           Nasa Recorded Global Events
         </Typography>
         <Filters setUrl={setUrl} />
-        <Map url={url} setLoading={setLoading} />
+        <Map url={url} />
         <footer>
           All data from{" "}
           <a href="https://eonet.gsfc.nasa.gov/" target="blank">

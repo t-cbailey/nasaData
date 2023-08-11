@@ -42,5 +42,4 @@ export interface filtersProps {
 }
 export interface mapProps {
   url: string;
-  setLoading: Function;
 }
